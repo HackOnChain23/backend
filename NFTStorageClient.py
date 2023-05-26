@@ -49,6 +49,10 @@ class NFTStorageClient:
             raise Exception(f"Failed to retrieve file metadata with status code {resp.status_code}")
 
 
+def generate_nft_storage_url(cid: str):
+    return cid + ".ipfs.nftstorage.link"
+
+
 client = NFTStorageClient()
 
 image_path = "images/image1.png"
@@ -56,8 +60,5 @@ response = client.upload_file(image_path)
 
 cid = response["value"]["cid"]
 
-metadata = client.get_file_metadata(cid)
-pp.pprint(metadata)
-
-# image_url = metadata["data"]["image"]["url"]
-# print(f"Image URL: {image_url}")
+url = generate_nft_storage_url(cid=cid)
+pp.pprint(url)

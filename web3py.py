@@ -1,4 +1,6 @@
 import json
+import requests
+import os
 
 from web3 import Web3
 
@@ -22,16 +24,26 @@ name = contract.functions.name().call()
 def balanceOf_call(wallet:str):
     tokenOOBI_list = []
     balance_amount = contract.functions.balanceOf(wallet).call()
-    print(balance_amount) 
+    tokenURI_dict = {
+            'id': str,
+            'name': str,
+            'description':str,
+            'image': str
+            }
+
     for i in range(0, balance_amount):
         tokenOOBI_list.append(contract.functions.tokenOfOwnerByIndex(wallet, balance_amount))
 
     tokenURI_list = []    
     for j in range(len(tokenOOBI_list)):
         tokenURI_list.append(contract.functions.tokenURI(j).call())
-
-    return tokenURI_list
-
+    
+    for k in range(len(tokenURI_list)):
+        r = requests.get(tokenURI_list[k])
+        a_z_blokczejnu = r.json()
+        a_z_blokczejnu['id'] = k 
+        print(a_z_blokczejnu)
+        
 balanceof = balanceOf_call('0x1d81532a666bb93a610d62b62cc264fb9Bc704Ed')
 
 print(balanceof)

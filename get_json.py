@@ -27,15 +27,10 @@ def balanceOf_call(wallet:str):
     tokenURI_list = [] 
     lista_jsonow = []
     balance_amount = contract.functions.balanceOf(wallet).call()
-    tokenURI_dict = {
-            'id': str,
-            'name': str,
-            'description':str,
-            'image': str
-            }
-
+  
     for i in range(0, balance_amount):
         tokenOOBI_list.append(contract.functions.tokenOfOwnerByIndex(wallet, i))
+    
     for j in range(len(tokenOOBI_list)):
         tokenURI_list.append(contract.functions.tokenURI(j).call())
     

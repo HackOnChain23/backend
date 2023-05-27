@@ -53,9 +53,10 @@ def create_picture(wallet_address: str, first_art: UploadFile = File(...)):
     url = NFTStorageClient.generate_nft_storage_url(cid=cid)
     LOG.info(f"NTF url: {url}")
 
-    invitation_code = generate_invitation_code()
+    # save to database (wallet_address, invitation_code, url)
+    # do we need wallet address? or only invitation code is needed?
 
-    return {"url": url, "invitationCode": invitation_code}
+    return {"url": url}
 
 
 @app.patch("/image/{position}")

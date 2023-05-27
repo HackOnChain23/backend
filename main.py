@@ -8,7 +8,7 @@ from loguru import logger as LOG
 
 from image_modifier import generate_composite_image_background_position
 from nft_storage_client import NFTStorageClient
-
+from get_json import balanceOf_call
 app = FastAPI()
 
 client = NFTStorageClient()
@@ -121,11 +121,15 @@ def update_picture(position: int, file: UploadFile = File(...)):
     LOG.info(f"Updating position {position}")
     return {"filename": file.filename}
 
+@app.get("/token_ids")
+def get_token(wallet:str):
+    return balanceOf_call(wallet)
+    
 
 # @app.patch("/update-file/{position}")
 # async def update_picture(position: int, file: UploadFile = File(...)):
 #     return {"filename": file.filename}
-import uvicorn
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+#import uvicorn
+#
+#if __name__ == "__main__":
+#    uvicorn.run(app, host="0.0.0.0", port=8000)

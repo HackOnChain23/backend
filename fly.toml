@@ -1,0 +1,14 @@
+# fly.toml app configuration file generated for hoc23 on 2023-05-27T09:59:23+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "hoc23"
+primary_region = "waw"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0

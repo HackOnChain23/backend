@@ -3,7 +3,7 @@ import json
 from web3 import Web3
 
 with open('abi.json', 'r') as file:
-    contract_abi = json.load(file)
+    contract_abi = json.load(file)["abi"]
 
 w3 = Web3(Web3.HTTPProvider("https://rpc.ankr.com/mantle_testnet"))
 

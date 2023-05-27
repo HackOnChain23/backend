@@ -93,6 +93,7 @@ def add_metadata(metadata_input: MetadataInput):
     LOG.info(f"Metadata creation")
 
     metadata = client.upload_json(metadata=metadata_input)
+    
     # metadata_input.token_id: str TUTAJ ODPYTUJE smartcontract?
     # token id jest po to do ktorego nfka mam dodac ta nowa czesc
     # adress walleta -> smartcontract

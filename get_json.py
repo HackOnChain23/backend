@@ -35,8 +35,7 @@ def balanceOf_call(wallet:str):
             }
 
     for i in range(0, balance_amount):
-        tokenOOBI_list.append(contract.functions.tokenOfOwnerByIndex(wallet, balance_amount))
-
+        tokenOOBI_list.append(contract.functions.tokenOfOwnerByIndex(wallet, i))
        
     for j in range(len(tokenOOBI_list)):
         tokenURI_list.append(contract.functions.tokenURI(j).call())
@@ -44,8 +43,10 @@ def balanceOf_call(wallet:str):
     for k in range(len(tokenURI_list)):
         r = requests.get(tokenURI_list[k])
         a_z_blokczejnu = r.json()
-        a_z_blokczejnu['id'] = k 
+        a_z_blokczejnu['id'] = tokenOOBI_list[k].call()
         lista_jsonow.append(a_z_blokczejnu)
 
     return lista_jsonow
-        
+       
+
+print(balanceOf_call('0x1d81532a666bb93a610d62b62cc264fb9Bc704Ed'))

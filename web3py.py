@@ -20,15 +20,19 @@ contract = w3.eth.contract(address=contract_address, abi=contract_abi)
 name = contract.functions.name().call()
 
 def balanceOf_call(wallet:str):
-    return contract.functions.balanceOf(wallet)
-
-def tokenOfOwnerByIndex_call(balanceof:int, wallet:str):
     tokenOOBI_list = []
-    for i in range(0, balanceof):
-        tokenOOBI_list.append(contract.tokenOfOwnerByIndex(wallet, balanceof).call())
-        contract.tokenURI(tokenOOBI)
+    balance_amount = contract.functions.balanceOf(wallet).call()
+    print(balance_amount) 
+    for i in range(0, balance_amount):
+        tokenOOBI_list.append(contract.functions.tokenOfOwnerByIndex(wallet, balance_amount))
 
+    tokenURI_list = []    
+    for j in range(len(tokenOOBI_list)):
+        tokenURI_list.append(contract.functions.tokenURI(j).call())
 
-balanceof = balanceOf_call('0x1d81532a666bb93a610d62b62cc264fb9Bc704Ed').call()
+    return tokenURI_list
+
+balanceof = balanceOf_call('0x1d81532a666bb93a610d62b62cc264fb9Bc704Ed')
+
 print(balanceof)
 print('dupa')

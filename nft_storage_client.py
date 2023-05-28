@@ -56,7 +56,7 @@ class NFTStorageClient:
             "image": f"https://{whole_nft}",
             "parts": ["" for _ in range(6)],
         }
-        data["parts"][metadata.position] = f"https://{metadata.image}"
+        data["parts"][metadata.position - 1] = f"https://{metadata.image}"
 
         data_io = io.StringIO()
         json.dump(data, data_io)
@@ -81,18 +81,18 @@ class NFTStorageClient:
 
     def update_metadata_on_ipfs(self, old_metadata, position, whole_nft, new_image_url):
         LOG.info(f"Position to update: {position}")
-        data = {
+        output = {
             "name": old_metadata["name"],
             "description": old_metadata["description"],
             "image": f"https://{whole_nft}",
             "parts": list(old_metadata["parts"]),
         }
-        index_to_update: int = position
+        index_to_update: int = position - 1
         LOG.info(f"Updating index {index_to_update} in parts")
-        data["parts"][index_to_update] = f"https://{new_image_url}"
+        output["parts"][index_to_update] = f"https://{new_image_url}"
 
         data_io = io.StringIO()
-        json.dump(data, data_io)
+        json.dump(output, data_io)
         data_io.seek(0)
 
         headers = {
@@ -103,8 +103,8 @@ class NFTStorageClient:
 
         if resp.status_code == 200:
             LOG.info("Metadata uploaded successfully")
-            LOG.info(f"Metadata: {data}")
-            return resp.json(), data
+            LOG.info(f"Metadata: {output}")
+            return resp.json(), output
         else:
             LOG.exception(
                 f"Metadata storage failed with status code {resp.status_code}"

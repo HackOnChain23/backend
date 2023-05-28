@@ -167,7 +167,7 @@ def add_metadata(metadata_input: MetadataInput):
         cid = response["value"]["cid"]
         whole_nft = NFTStorageClient.generate_nft_storage_url(cid=cid)
 
-        metadata, data = client.update_metadata_on_ipfs(
+        metadata = client.update_metadata_on_ipfs(
             old_metadata=ipfs_url_json,
             position=metadata_input.position,
             whole_nft=whole_nft,

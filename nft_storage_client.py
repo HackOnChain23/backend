@@ -56,7 +56,7 @@ class NFTStorageClient:
             "image": f"https://{whole_nft}",
             "parts": ["" for _ in range(6)],
         }
-        data["parts"][metadata.position - 1] = f"https://{metadata.image}"
+        data["parts"][metadata.position] = f"https://{metadata.image}"
 
         data_io = io.StringIO()
         json.dump(data, data_io)
@@ -85,9 +85,9 @@ class NFTStorageClient:
             "name": old_metadata["name"],
             "description": old_metadata["description"],
             "image": f"https://{whole_nft}",
-            "parts": old_metadata["parts"],
+            "parts": list(old_metadata["parts"]),
         }
-        index_to_update: int = position - 1
+        index_to_update: int = position
         LOG.info(f"Updating index {index_to_update} in parts")
         data["parts"][index_to_update] = f"https://{new_image_url}"
 

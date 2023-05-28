@@ -189,7 +189,7 @@ def get_tokens(wallet: str):
     return balanceOf_call(wallet)
 
 
-import uvicorn
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# import uvicorn
+#
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)

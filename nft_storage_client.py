@@ -103,8 +103,8 @@ class NFTStorageClient:
 
         if resp.status_code == 200:
             LOG.info("Metadata uploaded successfully")
-            LOG.info(f"Metadata: {output}")
-            return resp.json(), output
+            LOG.info(f"Metadata: {resp.json()}")
+            return resp.json()
         else:
             LOG.exception(
                 f"Metadata storage failed with status code {resp.status_code}"

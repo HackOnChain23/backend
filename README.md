@@ -14,3 +14,19 @@ Run FastAPI server:
 ```python
  uvicorn main:app --reload
 ```
+
+## How to deploy?
+
+Create account on [https://fly.io/](https://fly.io/)
+
+```shell
+brew install flyctl
+```
+
+```shell
+flyctl auth login
+```
+
+```shell
+flyctl launch
+```

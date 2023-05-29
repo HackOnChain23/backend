@@ -2,9 +2,10 @@ from PIL import Image
 import json
 import requests as r
 import io
+import asyncio
 
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from loguru import logger as LOG
@@ -12,7 +13,7 @@ from web3 import Web3
 
 from image_modifier import generate_composite_image_background_position
 from nft_storage_client import NFTStorageClient
-from dalle import return_image
+from dalle import Dalle
 from get_json import balanceOf_call
 from config import CONTRACT_ADDRESS
 
@@ -42,8 +43,14 @@ app.add_middleware(
 )
 
 
-class PromptInput(BaseModel):
-    dalle_input: str
+class DalleInput(BaseModel):
+    prompt: str
+
+    @validator('prompt')
+    def check_length(cls, v):
+        if len(v) > 20:
+            raise ValueError('This input is too long. Enter less than 20 characters')
+        return v
 
 
 class MetadataInput(BaseModel):
@@ -179,9 +186,21 @@ def add_metadata(metadata_input: MetadataInput):
         return f"https://{ipfs_url}"
 
 
-@app.post("/ai-prompt")
-def ai_prompt(prompt: PromptInput):
-    return return_image(prompt.dalle_input)
+@app.post("/ai-generate")
+async def ai_prompt(ai_input: DalleInput):
+    """Generate 4 image ideas AI based on given prompt"""
+
+    dalle = Dalle()
+    delle_urls = await dalle.generate_image(ai_input.prompt, 4)
+
+    tasks = []
+    for url in delle_urls:
+        downloaded_image = await dalle.download_image(url)
+        tasks.append(dalle.upload_file_to_ipfs(downloaded_image))
+
+    ipfs_url = await asyncio.gather(*tasks)
+
+    return ipfs_url
 
 
 @app.get("/token-ids")

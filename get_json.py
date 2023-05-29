@@ -34,4 +34,4 @@ def balanceOf_call(wallet: str):
     return lista_jsonow
 
 
-print(balanceOf_call("0xAaee830dC9A872e7A907EA037d5ddbCA3BD621a2"))
+print(balanceOf_call("0x1d81532a666bb93a610d62b62cc264fb9Bc704Ed"))

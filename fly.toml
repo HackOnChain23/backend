@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for hoc23 on 2023-05-28T06:22:56+02:00
+# fly.toml app configuration file generated for blockartistry on 2023-05-30T19:03:04+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "hoc23"
+app = "blockartistry"
 primary_region = "waw"
 
 [http_service]

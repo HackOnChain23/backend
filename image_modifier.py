@@ -1,4 +1,4 @@
-def generate_composite_image_background_position(
+def generate_grid_with_initial_image_on_given_position(
     background_image, overlay_image, position
 ):
     if position < 1 or position > 6:

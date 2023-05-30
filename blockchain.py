@@ -1,10 +1,11 @@
 import json
-import requests
+import requests as r
 
 from typing import List, Dict
 
-from web3 import Web3
+from fastapi import HTTPException
 from loguru import logger as LOG
+from web3 import Web3
 
 from config import SMART_CONTRACT_ADDRESS
 
@@ -46,7 +47,7 @@ def fetch_owned_tokens_info(wallet: str) -> List[Dict]:
             token_uri = contract.functions.tokenURI(token_id).call()
 
             # Retrieve metadata from URI
-            response = requests.get(token_uri)
+            response = r.get(token_uri)
             response.raise_for_status()  # Raise exception if status code is not 200
             metadata = response.json()
             metadata["id"] = token_id
@@ -58,6 +59,16 @@ def fetch_owned_tokens_info(wallet: str) -> List[Dict]:
             )
 
     return metadata_list
+
+
+def get_ipfs_url_by_given_token_id(token_id: int):
+    try:
+        ipfs_url = contract.functions.tokenURI(token_id).call()
+        ipfs_json = r.get(ipfs_url).json()
+    except Exception:
+        LOG.exception("Problem with calling tokenURI function")
+        raise HTTPException(status_code=500, detail="Failed to connect with contract.")
+    return ipfs_json
 
 
 # res = fetch_owned_tokens_info("0xD6D610866A888Ce99c0778EE518D7628c1A9a1e4")

@@ -6,7 +6,7 @@ from typing import List, Dict
 from web3 import Web3
 from loguru import logger as LOG
 
-from config import CONTRACT_ADDRESS
+from config import SMART_CONTRACT_ADDRESS
 
 
 with open("abi.json", "r") as file:
@@ -19,7 +19,7 @@ if w3.is_connected():
 else:
     LOG.exception("Connection Failed with Mantle testnet")
 
-contract = w3.eth.contract(address=CONTRACT_ADDRESS, abi=contract_abi)
+contract = w3.eth.contract(address=SMART_CONTRACT_ADDRESS, abi=contract_abi)
 name = contract.functions.name().call()
 
 

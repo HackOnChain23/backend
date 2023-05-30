@@ -2,14 +2,13 @@ import requests as r
 import io
 import asyncio
 
-from typing import Optional
-import blockchain
-from pydantic import BaseModel, validator
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from loguru import logger as LOG
 from PIL import Image
 
+import blockchain
+from models import DalleInput, NftUpdate, MintInput
 from image_modifier import generate_grid_with_initial_image_on_given_position
 from nft_storage_client import NFTStorageClient
 from dalle import Dalle
@@ -25,53 +24,6 @@ app.add_middleware(
 )
 
 client = NFTStorageClient()
-
-
-class DalleInput(BaseModel):
-    prompt: str
-
-    @validator("prompt")
-    def check_length(cls, v):
-        if len(v) > 20:
-            raise ValueError("This input is too long. Enter less than 20 characters")
-        return v
-
-
-class MintInput(BaseModel):
-    name: str
-    description: str
-    image: str
-    position: int
-
-    @validator("image")
-    def image_url_must_be_valid(cls, v):
-        if not v.startswith("https://"):
-            raise ValueError("Image URL must start with: https://")
-        if not v.endswith(".ipfs.nftstorage.link"):
-            raise ValueError("Image URL must end with: .ipfs.nftstorage.link")
-        return v
-
-
-class NftUpdate(BaseModel):
-    image: str
-    position: int
-    token_id: int
-
-    @validator("image")
-    def image_url_must_be_valid(cls, v):
-        if not v.startswith("https://"):
-            raise ValueError("Image URL must start with: https://")
-        if not v.endswith(".ipfs.nftstorage.link"):
-            raise ValueError("Image URL must end with: .ipfs.nftstorage.link")
-        return v
-
-
-class MetadataInput(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
-    image: str
-    position: int
-    token_id: Optional[int]
 
 
 @app.get("/healthcheck")
@@ -95,6 +47,7 @@ def create_picture(first_art: UploadFile = File(...)):
 
 @app.post("/mint")
 def mint_nft(mint_input: MintInput):
+    """Mint a new NFT from an image URL and returns the IPFS URL of the minting data."""
     LOG.info("Creating data needed for NFT minting")
 
     # Load the given image
@@ -137,6 +90,7 @@ def mint_nft(mint_input: MintInput):
 
 @app.patch("/nft")
 def add_part_of_nft(nft_update: NftUpdate):
+    """Add a new part of NFT and returns the IPFS URL of the updated data."""
     LOG.info("Updating NFT data")
 
     # Get NFT JSON data from IPFS by given token_id
@@ -210,3 +164,9 @@ async def ai_prompt(ai_input: DalleInput):
 @app.get("/token-ids")
 def get_tokens(wallet: str):
     return blockchain.fetch_owned_tokens_info(wallet)
+
+
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

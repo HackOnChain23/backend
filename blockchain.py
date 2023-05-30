@@ -48,7 +48,7 @@ def fetch_owned_tokens_info(wallet: str) -> List[Dict]:
 
             # Retrieve metadata from URI
             response = r.get(token_uri)
-            response.raise_for_status()  # Raise exception if status code is not 200
+            response.raise_for_status()
             metadata = response.json()
             metadata["id"] = token_id
             metadata_list.append(metadata)

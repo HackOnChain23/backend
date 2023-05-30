@@ -47,9 +47,7 @@ class Dalle:
 
         async with ClientSession() as session:
             async with session.post(
-                "https://api.nft.storage/upload",
-                headers=headers,
-                data=file
+                "https://api.nft.storage/upload", headers=headers, data=file
             ) as resp:
                 if resp.status == 200:
                     LOG.info("Image uploaded successfully to IPFS")

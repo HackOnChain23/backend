@@ -49,6 +49,7 @@ def create_picture(first_art: UploadFile = File(...)):
 def mint_nft(mint_input: MintInput):
     """Mint a new NFT from an image URL and returns the IPFS URL of the minting data."""
     LOG.info("Creating data needed for NFT minting")
+    LOG.info(f"Mint NFT: {mint_input}")
 
     # Load the given image
     try:
@@ -92,6 +93,8 @@ def mint_nft(mint_input: MintInput):
 def add_part_of_nft(nft_update: NftUpdate):
     """Add a new part of NFT and returns the IPFS URL of the updated data."""
     LOG.info("Updating NFT data")
+    LOG.info(f"Update NFT: {nft_update}")
+
 
     # Get NFT JSON data from IPFS by given token_id
     nft_data = blockchain.get_ipfs_url_by_given_token_id(token_id=nft_update.token_id)
@@ -163,10 +166,11 @@ async def ai_prompt(ai_input: DalleInput):
 
 @app.get("/token-ids")
 def get_tokens(wallet: str):
+    LOG.info(f"Tokens for wallet: {wallet}")
     return blockchain.fetch_owned_tokens_info(wallet)
 
 
-import uvicorn
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+# import uvicorn
+#
+# if __name__ == "__main__":
+#     uvicorn.run(app, host="0.0.0.0", port=8000)
